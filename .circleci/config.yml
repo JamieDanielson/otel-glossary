@@ -10,6 +10,14 @@ orbs:
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
+  setup:
+    executor: go
+    steps:
+      - buildevents/start_trace
+  watch:
+    executor: go
+    steps:
+      - buildevents/watch_build_and_finish
   say-hello:
     # Specify the execution environment.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
@@ -27,4 +35,8 @@ jobs:
 workflows:
   say-hello-workflow:
     jobs:
+      - setup
+      - watch:
+          requires:
+            - setup    
       - say-hello
